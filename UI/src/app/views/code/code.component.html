@@ -1,1 +1,19 @@
-<p>code works!</p>
+<h3>{{snippet?.name}}</h3>
+<div class="row">
+    <div class="col-sm-6 col-lg-6">
+        <tabset>
+            <tab heading="Home">
+                <ngx-monaco-editor [options]="editorOptions" [ngModel]="snippet?.code"
+                    (ngModelChange)="snippet.code = $event">
+                </ngx-monaco-editor>
+            </tab>
+            <tab heading="Revisions">
+            </tab>
+        </tabset>
+        <button style="margin-top:10px" type="button" class="btn btn-outline-primary active" aria-pressed="true"
+            (click)='run()'>Run</button>
+    </div>
+    <div class="col-sm-6 col-lg-6">
+        <ng-terminal #term [dataSource]="writeSubject"></ng-terminal>
+    </div>
+</div>
