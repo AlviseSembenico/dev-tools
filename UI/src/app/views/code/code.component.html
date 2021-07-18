@@ -12,6 +12,8 @@
         </tabset>
         <button style="margin-top:10px" type="button" class="btn btn-outline-primary active" aria-pressed="true"
             (click)='run()'>Run</button>
+        <button style="margin-top:10px" type="button" class="btn btn-outline-success active" aria-pressed="true"
+            (click)='save()'>Save</button>
     </div>
     <div class="col-sm-6 col-lg-6">
         <ng-terminal #term [dataSource]="writeSubject"></ng-terminal>

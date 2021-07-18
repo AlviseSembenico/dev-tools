@@ -26,4 +26,9 @@ export class CodeService {
     return this.http.put(environment.apiUrl + `/snippets/${snippet._id}`, snippet);
   }
 
+  createSnippet(snippet: Snippet): Observable<any> {
+    // Create a new snippet
+    return this.http.post(environment.apiUrl + `/snippets`, snippet);
+  }
+
 }

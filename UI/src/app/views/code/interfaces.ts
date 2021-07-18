@@ -1,5 +1,5 @@
 export interface Snippet {
-    _id: string;
+    _id?: string;
     name: string;
     code: string;
     language: string;

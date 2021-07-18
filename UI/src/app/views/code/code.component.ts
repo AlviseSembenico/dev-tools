@@ -29,7 +29,13 @@ export class CodeComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.codeService.getSnippet(params['id']).subscribe(snippet =>
-        this.snippet = snippet);
+        this.snippet = snippet,
+        () => this.snippet = {
+          name: 'New snippet',
+          language: '',
+          code: '',
+          revision: null
+        });
     });
   }
 
@@ -44,7 +50,10 @@ export class CodeComponent implements OnInit, AfterViewInit {
   }
 
   save() {
-    this.codeService.saveSnippet(this.snippet).subscribe();
+    if (this.snippet._id)
+      this.codeService.saveSnippet(this.snippet).subscribe();
+    else
+      this.codeService.createSnippet(this.snippet).subscribe(res => this.snippet._id = res.id);
   }
 
 }
