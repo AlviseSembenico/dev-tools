@@ -30,8 +30,10 @@ export class CodeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.codeService.getSnippet(params['id']).subscribe(snippet =>
-        this.snippet = snippet,
+      this.codeService.getSnippet(params['id']).subscribe(snippet => {
+        this.editorOptions.language = snippet.language.toLowerCase();
+        this.snippet = snippet;
+      },
         () => this.snippet = {
           name: 'New snippet',
           language: '',

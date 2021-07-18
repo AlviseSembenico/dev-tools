@@ -1,8 +1,20 @@
 <h3 (click)='editTitle=true' *ngIf="!editTitle">{{snippet?.name}}</h3>
 <input [(ngModel)]='snippet.name' type="text" class="form-control" id="name" *ngIf="editTitle"
     placeholder="Enter the snippet name" (keyup.enter)='saveName()'>
+
+<div class="row" *ngIf="snippet !== undefined">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="ccmonth">Language</label>
+            <select class="form-control" [(ngModel)]='snippet.language' (change)='save()'>
+                <option>Javascript</option>
+                <option>Python</option>
+            </select>
+        </div>
+    </div>
+</div>
 <div class="row">
-    <div class="col-sm-6 col-lg-6">
+    <div class="col-sm-6 col-lg-6" *ngIf="snippet !== undefined">
         <tabset>
             <tab heading="Home">
                 <ngx-monaco-editor [options]="editorOptions" [ngModel]="snippet?.code"
