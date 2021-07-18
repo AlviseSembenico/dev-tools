@@ -1,4 +1,6 @@
 import json
+import re
+from typing import Iterable
 
 from fastapi import APIRouter, HTTPException
 from pydantic.main import BaseModel
@@ -18,17 +20,30 @@ class Snippet(BaseModel):
     language: str
 
 
+def parse_id(obj):
+    def parse_obj(obj):
+        if isinstance(obj['_id'], dict):
+            obj['_id'] = obj['_id']['$oid']
+        return obj
+    if isinstance(obj, list):
+        obj = list(map(parse_obj, obj))
+        return obj
+
+    return parse_obj(obj)
+
+
 @router.get('/{id}')
-def run(id: str):
+def get_snippet_by_id(id: str):
     snippet = MONGO_CLIENT.devtools.snippets.find_one({"_id": ObjectId(id)})
     if snippet is None:
         raise HTTPException(
             status_code=404, detail="Resource requested not found")
-    return json.loads(dumps(snippet))
+
+    return parse_id(json.loads(dumps(snippet)))
 
 
 @router.put('/{id}')
-def run(id: str, snippet: Snippet):
+def update_snppet(id: str, snippet: Snippet):
     snippet = MONGO_CLIENT.devtools.snippets.replace_one(
         {"_id": ObjectId(id)}, snippet.dict())
     if not snippet.acknowledged:
@@ -41,8 +56,14 @@ def run(id: str, snippet: Snippet):
     return {'status': 'successful'}
 
 
+@router.get('/')
+def get_all_snippets():
+    snippets = MONGO_CLIENT.devtools.snippets.find()
+    return parse_id(json.loads(dumps(snippets)))
+
+
 @router.post('/')
-def run(snippet: Snippet):
+def insert_snippet(snippet: Snippet):
     snippet = MONGO_CLIENT.devtools.snippets.insert_one(
         snippet.dict())
     if not snippet.acknowledged:
@@ -54,7 +75,7 @@ def run(snippet: Snippet):
 
 
 @router.delete('/{id}')
-def run(id: str):
+def delete_snippet(id: str):
     snippet = MONGO_CLIENT.devtools.snippets.delete_one({"_id": ObjectId(id)})
     if snippet.deleted_count == 0:
         raise HTTPException(
