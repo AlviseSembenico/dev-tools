@@ -4,12 +4,13 @@ import { NbAuthComponent, NbLoginComponent } from '@nebular/auth';
 
 // Import Containers
 import { DefaultLayoutComponent } from './containers';
+import { CodeComponent } from './views/code/code.component';
 
 import { P404Component } from './views/error/404.component';
 import { P500Component } from './views/error/500.component';
 
 export const routes: Routes = [
-  
+
   {
     path: '404',
     component: P404Component,
@@ -70,13 +71,17 @@ export const routes: Routes = [
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
+      {
+        path: 'code/:id',
+        loadChildren: () => import('./views/code/code.module').then(m => m.CodeModule)
+      }
     ]
   },
   { path: '**', component: P404Component }
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

@@ -72,7 +72,7 @@ import { HttpClientModule } from '@angular/common/http';
         }),
       ],
       forms: {},
-    }), 
+    }),
   ],
   declarations: [
     AppComponent,
@@ -87,6 +87,6 @@ import { HttpClientModule } from '@angular/common/http';
     },
     IconSetService,
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
