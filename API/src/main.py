@@ -4,10 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
 from .routers import executor
+from .routers import snippets
 
 app = FastAPI()
 
 app.include_router(executor.router)
+app.include_router(snippets.router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
