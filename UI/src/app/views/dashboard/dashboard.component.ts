@@ -77,4 +77,9 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.snippets = this.codeService.getAllSnippets();
   }
+
+  deleteSnippet(id: string) {
+    this.codeService.deleteSnippet(id).subscribe();
+    this.snippets = this.codeService.getAllSnippets();
+  }
 }

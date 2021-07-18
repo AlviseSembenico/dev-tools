@@ -35,4 +35,8 @@ export class CodeService {
     return this.http.post(environment.apiUrl + `/snippets`, snippet);
   }
 
+  deleteSnippet(id: string): Observable<any> {
+    return this.http.delete(environment.apiUrl + `/snippets/${id}`);
+  }
+
 }
