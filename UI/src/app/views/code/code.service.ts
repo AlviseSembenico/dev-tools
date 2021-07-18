@@ -15,6 +15,10 @@ export class CodeService {
     return this.http.get<Snippet>(environment.apiUrl + `/snippets/${id}`);
   }
 
+  getAllSnippets(): Observable<Snippet[]> {
+    return this.http.get<Snippet[]>(environment.apiUrl + `/snippets/`);
+  }
+
   executeSnippet(snippet: Snippet): Observable<ExecutionResult> {
     return this.http.post<ExecutionResult>(environment.apiUrl + `/snippets/execute`, {
       code: snippet.code,

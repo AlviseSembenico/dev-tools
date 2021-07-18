@@ -7,16 +7,18 @@ import { ButtonsModule } from 'ngx-bootstrap/buttons';
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
     FormsModule,
+    CommonModule,
     DashboardRoutingModule,
     ChartsModule,
     BsDropdownModule,
     ButtonsModule.forRoot(),
     MonacoEditorModule.forRoot(),
   ],
-  declarations: [ DashboardComponent ]
+  declarations: [DashboardComponent]
 })
 export class DashboardModule { }
