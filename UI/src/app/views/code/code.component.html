@@ -1,4 +1,6 @@
-<h3>{{snippet?.name}}</h3>
+<h3 (click)='editTitle=true' *ngIf="!editTitle">{{snippet?.name}}</h3>
+<input [(ngModel)]='snippet.name' type="text" class="form-control" id="name" *ngIf="editTitle"
+    placeholder="Enter the snippet name" (keyup.enter)='saveName()'>
 <div class="row">
     <div class="col-sm-6 col-lg-6">
         <tabset>

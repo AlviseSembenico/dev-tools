@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import ansiStyles from 'ansi-styles';
 import * as chalk from 'chalk';
 import { NgTerminal } from 'ng-terminal';
@@ -17,10 +17,12 @@ export class CodeComponent implements OnInit, AfterViewInit {
   editorOptions = { theme: 'vs-dark', language: 'javascript' };
   snippet: Snippet;
   writeSubject = new Subject<string>();
+  editTitle = false;
 
   @ViewChild('term', { static: true }) terminal: NgTerminal;
 
   constructor(private codeService: CodeService,
+    private router: Router,
     private route: ActivatedRoute) { }
 
   ngAfterViewInit() {
@@ -52,8 +54,18 @@ export class CodeComponent implements OnInit, AfterViewInit {
   save() {
     if (this.snippet._id)
       this.codeService.saveSnippet(this.snippet).subscribe();
-    else
-      this.codeService.createSnippet(this.snippet).subscribe(res => this.snippet._id = res.id);
+    else {
+      this.codeService.createSnippet(this.snippet).subscribe(res => {
+        this.snippet._id = res.id;
+        // navigate to new snippet with id
+        this.router.navigate(['/code', this.snippet._id]);
+      });
+    }
+  }
+
+  saveName() {
+    this.editTitle = false;
+    this.save();
   }
 
 }
