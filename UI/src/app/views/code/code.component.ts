@@ -38,9 +38,13 @@ export class CodeComponent implements OnInit, AfterViewInit {
       .subscribe(result => {
         this.terminal.underlying.clear();
         if (result.error !== undefined)
-          this.writeSubject.next(`${ansiStyles.red.open}chalk.red(result.error)${ansiStyles.red.close}`);
+          this.writeSubject.next(`${ansiStyles.red.open}${result.error}${ansiStyles.red.close}`);
         this.writeSubject.next(result.res);
       })
+  }
+
+  save() {
+    this.codeService.saveSnippet(this.snippet).subscribe();
   }
 
 }
