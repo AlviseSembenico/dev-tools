@@ -1,6 +1,7 @@
+from datetime import datetime
 import json
 import re
-from typing import Iterable
+from typing import Iterable, Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic.main import BaseModel
@@ -16,8 +17,10 @@ router = APIRouter(prefix='/api/snippets')
 
 class Snippet(BaseModel):
 
+    name: str
     code: str
     language: str
+    revision: Optional[datetime] = None
 
 
 def parse_id(obj):
