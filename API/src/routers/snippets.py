@@ -4,13 +4,14 @@ import re
 from typing import Iterable, Optional
 
 from fastapi import APIRouter, HTTPException
+from fastapi.params import Depends
 from pydantic.main import BaseModel
 
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 
+from ..internal.auth import manager
 from ..internal.interfaces import MONGO_CLIENT
-
 
 router = APIRouter(prefix='/api/snippets')
 
@@ -36,7 +37,7 @@ def parse_id(obj):
 
 
 @router.get('/{id}')
-def get_snippet_by_id(id: str):
+def get_snippet_by_id(id: str, user=Depends(manager)):
     snippet = MONGO_CLIENT.devtools.snippets.find_one({"_id": ObjectId(id)})
     if snippet is None:
         raise HTTPException(
@@ -46,7 +47,7 @@ def get_snippet_by_id(id: str):
 
 
 @router.put('/{id}')
-def update_snppet(id: str, snippet: Snippet):
+def update_snppet(id: str, snippet: Snippet, user=Depends(manager)):
     snippet = MONGO_CLIENT.devtools.snippets.replace_one(
         {"_id": ObjectId(id)}, snippet.dict())
     if not snippet.acknowledged:
@@ -60,13 +61,13 @@ def update_snppet(id: str, snippet: Snippet):
 
 
 @router.get('/')
-def get_all_snippets():
+def get_all_snippets(user=Depends(manager)):
     snippets = MONGO_CLIENT.devtools.snippets.find()
     return parse_id(json.loads(dumps(snippets)))
 
 
 @router.post('/')
-def insert_snippet(snippet: Snippet):
+def insert_snippet(snippet: Snippet, user=Depends(manager)):
     snippet = MONGO_CLIENT.devtools.snippets.insert_one(
         snippet.dict())
     if not snippet.acknowledged:
@@ -78,7 +79,7 @@ def insert_snippet(snippet: Snippet):
 
 
 @router.delete('/{id}')
-def delete_snippet(id: str):
+def delete_snippet(id: str, user=Depends(manager)):
     snippet = MONGO_CLIENT.devtools.snippets.delete_one({"_id": ObjectId(id)})
     if snippet.deleted_count == 0:
         raise HTTPException(

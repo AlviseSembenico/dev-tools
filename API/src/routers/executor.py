@@ -2,8 +2,10 @@ import uuid
 import subprocess
 
 from fastapi import APIRouter, HTTPException
+from fastapi.params import Depends
 from pydantic.main import BaseModel
 
+from ..internal.auth import manager
 from ..internal.interfaces import MONGO_CLIENT
 
 
@@ -17,7 +19,7 @@ class Snippet(BaseModel):
 
 
 @router.post('/execute/{id}')
-def run(id: str):
+def run(id: str, user=Depends(manager)):
     snippet = MONGO_CLIENT.devtools.snippets.find_one({"_id": id})
     if snippet is None:
         raise HTTPException(
@@ -33,7 +35,7 @@ def run(id: str):
 
 
 @router.post('/execute')
-def run(snippet: Snippet):
+def run(snippet: Snippet, user=Depends(manager)):
     filename = f'../execute_{uuid.uuid4()}.py'
     with open(filename, 'w') as f:
         f.write(snippet.code)
