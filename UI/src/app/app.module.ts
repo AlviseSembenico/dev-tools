@@ -43,8 +43,10 @@ import { ChartsModule } from 'ng2-charts';
 import { MonacoEditorModule } from 'ngx-monaco-editor';
 import { NbThemeModule, NbLayoutModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { NbAuthModule, NbDummyAuthStrategy, NbDummyAuthStrategyOptions, NbPasswordAuthStrategy } from '@nebular/auth';
-import { HttpClientModule } from '@angular/common/http';
+import { NbAuthJWTToken, NbAuthModule, NbDummyAuthStrategy, NbDummyAuthStrategyOptions, NbPasswordAuthStrategy } from '@nebular/auth';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { environment } from '../environments/environment';
+import { CustomNbAuthJWTInterceptor } from './auth/jwt-interceptor';
 
 @NgModule({
   imports: [
@@ -65,10 +67,28 @@ import { HttpClientModule } from '@angular/common/http';
     IconSetModule.forRoot(),
     NbThemeModule.forRoot({ name: 'dark' }),
     NbAuthModule.forRoot({
+
       strategies: [
-        NbDummyAuthStrategy.setup({
+        NbPasswordAuthStrategy.setup({
           name: 'email',
-          delay: 3000,
+
+          token: {
+            class: NbAuthJWTToken,
+            key: 'token', // this parameter tells where to look for the token
+          },
+          baseEndpoint: environment.authUrl,
+          login: {
+            // ...
+            endpoint: 'api/auth/login',
+          },
+          register: {
+            // ...
+            endpoint: 'api/auth/register',
+          },
+          logout: {
+            // ...
+            endpoint: 'api/auth/logout',
+          },
         }),
       ],
       forms: {},
@@ -86,6 +106,7 @@ import { HttpClientModule } from '@angular/common/http';
       useClass: HashLocationStrategy
     },
     IconSetService,
+    { provide: HTTP_INTERCEPTORS, useClass: CustomNbAuthJWTInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

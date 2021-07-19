@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NbAuthComponent, NbLoginComponent } from '@nebular/auth';
+import { AuthGuard } from './auth/authguard';
 
 // Import Containers
 import { DefaultLayoutComponent } from './containers';
@@ -26,39 +27,13 @@ export const routes: Routes = [
     }
   },
   {
-    path: 'auth',
-    component: NbAuthComponent,
-    children: [
-      {
-        path: '',
-        component: NbLoginComponent,
-      },
-      {
-        path: 'login',
-        component: NbLoginComponent,
-      },
-      // {
-      //   path: 'register',
-      //   component: NbRegisterComponent,
-      // },
-      // {
-      //   path: 'logout',
-      //   component: NbLogoutComponent,
-      // },
-      // {
-      //   path: 'request-password',
-      //   component: NbRequestPasswordComponent,
-      // },
-      // {
-      //   path: 'reset-password',
-      //   component: NbResetPasswordComponent,
-      // },
-    ],
-  },
-  {
     path: '',
     redirectTo: 'dashboard',
     pathMatch: 'full',
+  },
+  {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
   },
   {
     path: '',
@@ -69,11 +44,13 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
-        loadChildren: () => import('./views/dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () => import('./views/dashboard/dashboard.module').then(m => m.DashboardModule),
+        canActivate: [AuthGuard],
       },
       {
         path: 'code/:id',
-        loadChildren: () => import('./views/code/code.module').then(m => m.CodeModule)
+        loadChildren: () => import('./views/code/code.module').then(m => m.CodeModule),
+        canActivate: [AuthGuard],
       }
     ]
   },
@@ -82,6 +59,7 @@ export const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [AuthGuard]
 })
 export class AppRoutingModule { }
