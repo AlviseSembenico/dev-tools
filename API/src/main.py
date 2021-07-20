@@ -29,9 +29,9 @@ app.add_middleware(
 )
 
 
-@app.get("/")
+@app.get("/ping")
 def read_root():
-    return {"Hello": "World"}
+    return {"Status": "Operational"}
 
 
 @app.get("/items/{item_id}")
@@ -40,3 +40,24 @@ def read_item(item_id: int, q: str = None):
 
 
 handler = Mangum(app)
+
+
+
+if __name__ == "__main__":
+    '''
+    DEBUG Mode on
+    '''
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+else:
+    '''
+    Production mode
+    '''
+    import sentry_sdk
+    from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+
+    sentry_sdk.init(
+        dsn="https://271dc35e73924161ad8faca434deaa65@o359982.ingest.sentry.io/5872881",
+        traces_sample_rate=1.0
+    )
+
+    app.add_middleware(SentryAsgiMiddleware)
