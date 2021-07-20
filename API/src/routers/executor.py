@@ -36,7 +36,7 @@ def run(id: str, user=Depends(manager)):
 
 @router.post('/execute')
 def run(snippet: Snippet, user=Depends(manager)):
-    filename = f'../execute_{uuid.uuid4()}.py'
+    filename = f'/tmp/execute_{uuid.uuid4()}.py'
     with open(filename, 'w') as f:
         f.write(snippet.code)
     result = subprocess.run(['python', filename],
