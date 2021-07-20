@@ -24,7 +24,7 @@ def run(id: str, user=Depends(manager)):
     if snippet is None:
         raise HTTPException(
             status_code=404, detail="Resource requested not found")
-    filename = f'../execute_{id}.py'
+    filename = f'/tmp/execute_{id}.py'
     with open(filename, 'w') as f:
         f.write(snippet['code'])
     result = subprocess.run(['python', filename], stdout=subprocess.PIPE)
