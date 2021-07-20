@@ -12,7 +12,7 @@ stage = os.environ.get('STAGE', None)
 openapi_prefix = f"/{stage}" if stage else "/"
 
 app = FastAPI(
-    title='Intrical AI - app',
+    title='Devtools - app',
     version='0.1',
     openapi_prefix=openapi_prefix
 )
